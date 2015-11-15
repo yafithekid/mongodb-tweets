@@ -2,10 +2,12 @@ package models;
 
 import models.Tweet;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 
 @Entity("userlines")
+@Indexes(
+        @Index(fields = {@Field("tweet.time")})
+)
 public class Userline {
     @Id
     private ObjectId id;

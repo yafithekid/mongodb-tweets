@@ -1,10 +1,12 @@
 package models;
 
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 
 @Entity("timelines")
+@Indexes(
+    @Index(fields = {@Field("tweet.time")})
+)
 public class Timeline {
     @Id
     private ObjectId id;

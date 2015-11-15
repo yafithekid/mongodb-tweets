@@ -1,19 +1,12 @@
-import com.mongodb.BasicDBObject;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
 import exceptions.AlreadyFollowUserException;
 import exceptions.UserAlreadyExistsException;
 import models.*;
-import org.bson.Document;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +14,6 @@ import java.util.List;
 public class Server {
     final static String DB_NAME = "yafi";
     MongoClient client;
-    MongoDatabase database;
     final Morphia morphia;
     final Datastore datastore;
 
@@ -105,28 +97,7 @@ public class Server {
                 .get();
     }
 
-    public MongoCollection<Document> getTweetCollection(){
-        return this.database.getCollection("tweets");
-    }
-
-    public MongoCollection<Document> getUserCollection(){
-        return this.database.getCollection("users");
-    }
-
-    public MongoCollection<Document> getUserlineCollection(){
-        return this.database.getCollection("userline");
-    }
-
-    public MongoCollection<Document> getTimelineCollection(){
-        return this.database.getCollection("timeline");
-    }
-
-    public MongoCollection<Document> getFollowerCollection(){
-        return this.database.getCollection("followers");
-    }
-
     public Server(){
-        System.setProperty("java.net.preferIPv4Stack" , "true");
         client = new MongoClient(
                 Arrays.asList(
                         new ServerAddress("127.0.0.1")
@@ -134,21 +105,14 @@ public class Server {
 //                        new ServerAddress("167.205.35.21"),
 //                        new ServerAddress("167.205.35.22")
         ));
-        database = client.getDatabase(DB_NAME);
-        getUserCollection().createIndex(new BasicDBObject().append("username",1),new IndexOptions().unique(true));
-        getFollowerCollection().createIndex(
-                new BasicDBObject()
-                        .append("username",1).append("follower",1),
-                new IndexOptions().unique(true));
-        getUserlineCollection().createIndex(
-                new BasicDBObject().append("tweet.time",-1)
-        );
-        getTimelineCollection().createIndex(
-                new BasicDBObject().append("tweet.time",-1)
-        );
         morphia = new Morphia();
-        morphia.mapPackage("models");
+        morphia.map(Follower.class);
+        morphia.map(Timeline.class);
+        morphia.map(Tweet.class);
+        morphia.map(User.class);
+        morphia.map(Userline.class);
         datastore = morphia.createDatastore(client,DB_NAME);
         datastore.ensureIndexes();
+
     }
 }
