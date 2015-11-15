@@ -1,6 +1,13 @@
 package models;
 
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+
+@Entity
 public class Tweet {
+    @Id
+    private ObjectId id;
     private String username;
     private String body;
     private long time;

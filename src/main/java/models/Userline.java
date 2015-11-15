@@ -2,16 +2,16 @@ package models;
 
 import models.Tweet;
 import org.bson.types.ObjectId;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
+@Entity("userlines")
 public class Userline {
-    private ObjectId _id;
+    @Id
+    private ObjectId id;
     private String username;
     private Tweet tweet;
     private long time;
-
-
-
 
     public String getUsername() {
         return username;

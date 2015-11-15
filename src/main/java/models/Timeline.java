@@ -1,9 +1,13 @@
 package models;
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
+@Entity("timelines")
 public class Timeline {
-    private ObjectId _id;
+    @Id
+    private ObjectId id;
     private String username;
     private Tweet tweet;
 

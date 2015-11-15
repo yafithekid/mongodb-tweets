@@ -1,4 +1,5 @@
 import com.mongodb.MongoWriteException;
+import exceptions.AlreadyFollowUserException;
 import models.Timeline;
 import models.User;
 import models.Userline;
@@ -38,10 +39,8 @@ public class Client {
                     try {
                         server.register(user);
                         System.out.println("[SUCCESS] register success");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (MongoWriteException me){
-                        System.out.println("[ERROR] username exists");
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] "+e.getMessage());
                     }
                 }
             } else if (split[0].equalsIgnoreCase("login")){
@@ -49,11 +48,14 @@ public class Client {
                 if (split.length != 3){
                     System.out.println("[ERROR] Usage: login <username> <password>");
                 }
-                else if (server.login(user)){
-                    uSession = user;
-                    System.out.println("[SUCCESS] Login successful as "+uSession.getUsername());
-                } else {
-                    System.out.println("[ERROR] Username/password not match");
+                else {
+                    User quser = server.getUser(split[1], split[2]);
+                    if (quser != null) {
+                        uSession = quser;
+                        System.out.println("[SUCCESS] Login successful as " + uSession.getUsername());
+                    } else {
+                        System.out.println("[ERROR] Username/password not match");
+                    }
                 }
             } else if (split[0].equalsIgnoreCase("follow")){
                 if (split.length != 2){
@@ -64,12 +66,10 @@ public class Client {
                     System.out.println("[ERROR] You are not logged in");
                 } else {
                     try {
-                        server.follow(uSession.getUsername(),split[1]);
-                        System.out.println("[SUCCESS] you followed "+split[1]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (MongoWriteException e){
-                        System.out.println("[ERROR] Already follow "+split[1]);
+                        server.follow(uSession.getUsername(), split[1]);
+                        System.out.println("[SUCCESS] you followed " + split[1]);
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] " + e.getMessage());
                     }
                 }
             } else if (split[0].equalsIgnoreCase("userline")){
@@ -79,25 +79,25 @@ public class Client {
                     List<Userline> userline = null;
                     try {
                         userline = server.getUserline(split[1]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    for(Userline t: userline){
-                        System.out.println("["+t.getTweet().getUsername()+"] "+t.getTweet().getBody());
+                        for(Userline t: userline){
+                            System.out.println("["+t.getTweet().getUsername()+"] "+t.getTweet().getBody());
+                        }
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] " + e.getMessage());
                     }
                 }
             } else if (split[0].equalsIgnoreCase("timeline")){
                 if (split.length != 2){
                     System.out.println("[ERROR] Usage: timeline <username>");
                 } else {
-                    List<Timeline> timeline = null;
+                    List<Timeline> timeline;
                     try {
                         timeline = server.getTimeline(split[1]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    for(Timeline t: timeline){
-                        System.out.println("["+t.getTweet().getUsername()+"] "+t.getTweet().getBody());
+                        for(Timeline t: timeline){
+                            System.out.println("["+t.getTweet().getUsername()+"] "+t.getTweet().getBody());
+                        }
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] "+e.getMessage());
                     }
                 }
             } else if (split[0].equalsIgnoreCase("tweet")){
@@ -111,8 +111,8 @@ public class Client {
                     try {
                         server.tweet(uSession.getUsername(),tweet);
                         System.out.println("[SUCCESS] tweet posted");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] "+e.getMessage());
                     }
                 }
             } else if (split[0].equalsIgnoreCase("exit")){
