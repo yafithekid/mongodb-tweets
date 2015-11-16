@@ -47,7 +47,7 @@ public class Server {
         tweet.setUsername(username);
         tweet.setBody(body);
         tweet.setTime(System.currentTimeMillis());
-        datastore.save(tweet)
+        datastore.save(tweet);
 
         Userline userline = new Userline();
         userline.setUsername(username);
@@ -73,14 +73,12 @@ public class Server {
 
     public List<Userline> getUserline(String username)  {
         return datastore.createQuery(Userline.class)
-                .field("username").equal(username)
-                .order("-tweet.time").asList();
+                .field("username").equal(username).asList();
     }
 
     public List<Timeline> getTimeline(String username) {
         return datastore.createQuery(Timeline.class)
-                .field("username").equal(username)
-                .order("-tweet.time").asList();
+                .field("username").equal(username).asList();
     }
 
     public boolean login(String username, String password){
@@ -99,13 +97,13 @@ public class Server {
     }
 
     public Server(){
-//        client = new MongoClient(
-//                Arrays.asList(
-//                        new ServerAddress("167.205.35.19"),
-//                        new ServerAddress("167.205.35.20"),
-//                        new ServerAddress("167.205.35.21"),
-//                        new ServerAddress("167.205.35.22")
-//        ));
+        /* client = new MongoClient(
+                Arrays.asList(
+                        new ServerAddress("167.205.35.19"),
+                        new ServerAddress("167.205.35.20"),
+                        new ServerAddress("167.205.35.21"),
+                        new ServerAddress("167.205.35.22")
+        )); */
         client = new MongoClient("127.0.0.1");
         morphia = new Morphia();
         morphia.map(Follower.class);
