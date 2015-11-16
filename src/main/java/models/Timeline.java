@@ -11,6 +11,7 @@ public class Timeline {
     @Id
     private ObjectId id;
     private String username;
+    @Reference
     private Tweet tweet;
 
     public String getUsername() {

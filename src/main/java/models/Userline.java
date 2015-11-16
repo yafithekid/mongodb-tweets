@@ -12,6 +12,7 @@ public class Userline {
     @Id
     private ObjectId id;
     private String username;
+    @Reference
     private Tweet tweet;
     private long time;
 
