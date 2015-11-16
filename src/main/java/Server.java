@@ -47,6 +47,7 @@ public class Server {
         tweet.setUsername(username);
         tweet.setBody(body);
         tweet.setTime(System.currentTimeMillis());
+        datastore.save(tweet)
 
         Userline userline = new Userline();
         userline.setUsername(username);
