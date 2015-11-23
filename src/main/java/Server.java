@@ -97,14 +97,15 @@ public class Server {
     }
 
     public Server(){
-        /* client = new MongoClient(
-                Arrays.asList(
-                        new ServerAddress("167.205.35.19"),
-                        new ServerAddress("167.205.35.20"),
-                        new ServerAddress("167.205.35.21"),
-                        new ServerAddress("167.205.35.22")
-        )); */
-        client = new MongoClient("127.0.0.1");
+//        client = new MongoClient(
+//                Arrays.asList(
+//                        new ServerAddress("167.205.35.19"),
+//                        new ServerAddress("167.205.35.20"),
+//                        new ServerAddress("167.205.35.21"),
+//                        new ServerAddress("167.205.35.22")
+//        ));
+        //client = new MongoClient("127.0.0.1");
+        client = new MongoClient("167.205.35.19");
         morphia = new Morphia();
         morphia.map(Follower.class);
         morphia.map(Timeline.class);
